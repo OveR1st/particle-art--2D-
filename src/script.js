@@ -5,6 +5,8 @@ import Stats from "three/examples/jsm/libs/stats.module";
 
 const IMG = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/204808/mj.png';
 
+const AMOUNT = 50; // max: 1000
+
 const getRandomArbitrary = (min, max) => {
   return Math.random() * (max - min) + min;
 }
@@ -31,8 +33,8 @@ class ParticleArt {
     this.canvas = document.getElementById('canvas')
 
     this.dpr = window.devicePixelRatio || 1;
-    this.ctx = this.canvas.getContext('2d');
 
+    this.ctx = this.canvas.getContext('2d');
     this.ctx.scale(this.dpr, this.dpr);
 
     this.art = new Image();
@@ -60,7 +62,7 @@ class ParticleArt {
 
     for (let y = 0; y < artData.height; y++) {
       for (let x = 0; x < artData.width; x++) {
-        if (artData.data[(y * 4 * artData.width) + (x * 4) + 3] > 128) {
+        if (artData.data[(y * 4 * artData.width) + (x * 4) + 3] > 128 && getRandomArbitrary(1, 1000) < AMOUNT) {
           const id = uuidv4();
           const color = getRandomColor();
           const size = getRandomArbitrary(1, 5);
@@ -84,8 +86,9 @@ class ParticleArt {
   drawParticles() {
     this.particleIds.map(id => {
       const particle = this.particles[id];
-      const posX = particle.x
-      const posY = particle.y
+
+      const posX = (window.innerWidth / 2) - (this.art.width / 2) + particle.x;
+      const posY = (window.innerHeight / 2) - (this.art.height / 2) + particle.y;
 
       this.ctx.beginPath();
       this.ctx.arc(posX * this.dpr, posY * this.dpr, particle.size * this.dpr, 0, 2 * Math.PI);
@@ -95,7 +98,6 @@ class ParticleArt {
   }
 
   render() {
-
     this.art.onload = () => {
 
       this.createParticles();
@@ -107,96 +109,3 @@ class ParticleArt {
 
 const particleArt = new ParticleArt();
 particleArt.render();
-
-// /**
-//  * Debug
-//  */
-// const gui = new dat.GUI()
-//
-// /**
-//  * Base
-//  */
-// // Canvas
-// const canvas = document.querySelector('canvas.webgl')
-//
-// // Scene
-// const scene = new THREE.Scene()
-//
-// /**
-//  * Textures
-//  */
-//
-//
-// /**
-//  * Test sphere
-//  */
-//
-//
-// /**
-//  * Floor
-//  */
-//
-//
-// /**
-//  * Lights
-//  */
-//
-//
-// /**
-//  * Sizes
-//  */
-// const sizes = {
-//     width: window.innerWidth,
-//     height: window.innerHeight
-// }
-//
-// window.addEventListener('resize', () =>
-// {
-//     // Update sizes
-//     sizes.width = window.innerWidth
-//     sizes.height = window.innerHeight
-//
-//     // Update camera
-//     camera.aspect = sizes.width / sizes.height
-//     camera.updateProjectionMatrix()
-//
-//     // Update renderer
-//     renderer.setSize(sizes.width, sizes.height)
-//     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-// })
-//
-// /**
-//  * Camera
-//  */
-//
-//
-// /**
-//  * Renderer
-//  */
-// const renderer = new THREE.WebGLRenderer({
-//     canvas: canvas
-// })
-//
-// renderer.setSize(sizes.width, sizes.height)
-// renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-//
-// /**
-//  * Animate
-//  */
-// const clock = new THREE.Clock()
-//
-// const tick = () =>
-// {
-//     const elapsedTime = clock.getElapsedTime()
-//
-//     // Update controls
-//     controls.update()
-//
-//     // Render
-//     renderer.render(scene, camera)
-//
-//     // Call tick again on the next frame
-//     window.requestAnimationFrame(tick)
-// }
-//
-// tick()
