@@ -1,7 +1,4 @@
 import './style.scss'
-import * as THREE from 'three'
-import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls.js'
-import Stats from "three/examples/jsm/libs/stats.module";
 
 const IMG = 'https://s3-us-west-2.amazonaws.com/s.cdpn.io/204808/mj.png';
 
